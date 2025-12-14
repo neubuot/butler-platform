@@ -33,6 +33,7 @@ db.sqlite3-journal
 .env
 .env.local
 .env.production
+*.env
 
 # IDE
 .vscode/
@@ -58,6 +59,7 @@ htmlcov/
 # Database backups
 *.sql
 *.dump
+backups/
 
 # Secrets (WICHTIG!)
 secrets/
@@ -69,3 +71,16 @@ secrets/
 node_modules/
 npm-debug.log
 yarn-error.log
+
+# Logs
+logs/
+*.log
+
+# Gunicorn
+gunicorn.sock
+
+# SSL Certificates
+*.cert
+*.csr
+fullchain.pem
+privkey.pem

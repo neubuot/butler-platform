@@ -1,0 +1,11 @@
+[Unit]
+Description=Butler Platform gunicorn socket
+
+[Socket]
+ListenStream=/home/butler/butler-platform/gunicorn.sock
+SocketUser=butler
+SocketGroup=www-data
+SocketMode=0660
+
+[Install]
+WantedBy=sockets.target

@@ -1,0 +1,29 @@
+[Unit]
+Description=Butler Platform Gunicorn daemon
+Requires=butler-platform.socket
+After=network.target postgresql.service
+
+[Service]
+Type=notify
+User=butler
+Group=www-data
+RuntimeDirectory=gunicorn
+WorkingDirectory=/home/butler/butler-platform
+Environment="PATH=/home/butler/butler-platform/venv/bin"
+EnvironmentFile=/home/butler/butler-platform/.env
+ExecStart=/home/butler/butler-platform/venv/bin/gunicorn \
+          --workers 3 \
+          --bind unix:/home/butler/butler-platform/gunicorn.sock \
+          --timeout 60 \
+          --access-logfile /home/butler/butler-platform/logs/gunicorn-access.log \
+          --error-logfile /home/butler/butler-platform/logs/gunicorn-error.log \
+          --log-level info \
+          config.wsgi:application
+ExecReload=/bin/kill -s HUP $MAINPID
+KillMode=mixed
+TimeoutStopSec=5
+PrivateTmp=true
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target
