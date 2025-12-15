@@ -1,6 +1,42 @@
 from django.contrib import admin
 from django.utils.html import format_html
 from .models import Booking
+import csv
+from django.http import HttpResponse
+
+
+def export_bookings_to_csv(modeladmin, request, queryset):
+    """Exportiert ausgewählte Buchungen als CSV"""
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Disposition'] = 'attachment; filename="buchungen_export.csv"'
+    response.write('\ufeff')  # UTF-8 BOM für Excel
+    
+    writer = csv.writer(response, delimiter=';')
+    writer.writerow([
+        'Buchungsnummer', 'Gerät', 'Mieter', 'Startdatum', 'Enddatum',
+        'Dauer (Tage)', 'Status', 'Einsatzbereich', 'Gesamtpreis (€)',
+        'Kontaktperson', 'Telefon', 'Erstellt am'
+    ])
+    
+    for booking in queryset:
+        writer.writerow([
+            booking.booking_number,
+            booking.device.serial_number,
+            str(booking.renter),
+            booking.start_date.strftime('%d.%m.%Y'),
+            booking.end_date.strftime('%d.%m.%Y'),
+            booking.duration_days,
+            booking.get_status_display(),
+            booking.get_usage_type_display(),
+            booking.total_price,
+            booking.contact_person,
+            booking.contact_phone,
+            booking.created_at.strftime('%d.%m.%Y %H:%M')
+        ])
+    
+    return response
+
+export_bookings_to_csv.short_description = "Ausgewählte Buchungen als CSV exportieren"
 
 
 @admin.register(Booking)
@@ -122,7 +158,7 @@ class BookingAdmin(admin.ModelAdmin):
         return f"{obj.duration_days} Tage"
     duration_days.short_description = 'Dauer'
     
-    actions = ['approve_bookings', 'reject_bookings', 'mark_as_completed']
+    actions = ['approve_bookings', 'reject_bookings', 'mark_as_completed', export_bookings_to_csv]
     
     def approve_bookings(self, request, queryset):
         """Aktion zum Genehmigen von Buchungen"""
