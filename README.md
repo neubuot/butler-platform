@@ -1,5 +1,7 @@
 # Butler Asset & Operations Platform
 
+[![Doichain Seal](https://doi-api.sendlabs.de/seal/github/neubuot/butler-platform/seal.svg)](https://doi-api.sendlabs.de/seal/github/neubuot/butler-platform)
+
 Eine webbasierte Asset-Management-Plattform für die Verwaltung von Butler-Energiesystemen, die IAB-Investoren, die rhk-mobil GmbH als Betreiber und gewerbliche Mieter miteinander verbindet.
 
 ## 🎯 Projekt-Übersicht
